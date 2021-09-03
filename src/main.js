@@ -1,33 +1,50 @@
-import createElement from './vdom/createElement';
-import render from './vdom/render';
-import mount from './vdom/mount';
-import diff from './vdom/diff';
-
-const createVApp = (count) => createElement('div', {
-  attrs: {
-    id: 'app',
-    dataCount: count,
-  },
-  children: [
-    createElement('input'),
-    String(count),
-    ...Array.from({ length: count }, () => createElement('img', {
-      attrs: {
-        src: 'https://media.giphy.com/media/cuPm4p4pClZVC/giphy.gif',
-      },
-    })),
-  ],
-});
+import { createElement, render, mount } from "./vdom/render";
+import diff from "./vdom/diff";
 
 let count = 0;
-let vApp = createVApp(count);
-const $app = render(vApp);
+let containerId = "";
+let currentApp;
+let currentRt;
 
-let $rootEl = mount($app, document.getElementById('app'));
+const init = (id) => {
+  containerId = id;
+  const app = createApp();
+  const vApp = render(app);
+  currentRt = mount(vApp, document.getElementById(containerId));
+  currentApp = app;
 
-setInterval(() => {
-  const vNewApp = createVApp(Math.floor(Math.random() * 10));
-  const patch = diff(vApp, vNewApp);
-  $rootEl = patch($rootEl);
-  vApp = vNewApp;
-}, 1000);
+  setInterval(() => {
+    updateCount();
+  }, 1000);
+};
+
+const updateCount = (e) => {
+  //e.target.value
+  count++;
+  const app = createApp();
+  const patch = diff(currentApp, app);
+  currentRt = patch(currentRt);
+  currentApp = app;
+};
+
+const App = {
+  createElement,
+  init,
+};
+
+/** @jsx App.createElement */
+const createApp = () => {
+  return (
+    <div id="app">
+      <input></input>
+      <br />
+      currentCounter is : {count}
+      <br />
+      <button onclick={updateCount}>upCount</button>
+      <br />
+      <img src="https://media.giphy.com/media/cuPm4p4pClZVC/giphy.gif"></img>
+    </div>
+  );
+};
+
+App.init("app");

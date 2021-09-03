@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel index.html",
+    "build": "parcle build main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Jason Yu <me@ycmjason.com>",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.15.4",
+    "@babel/preset-react": "^7.14.5",
     "parcel-bundler": "^1.12.3"
   }
 }
